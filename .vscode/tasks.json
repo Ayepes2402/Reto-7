@@ -2,7 +2,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "LEGO: iniciar Vite",
+			"label": "Señal estelar: iniciar Vite",
 			"type": "shell",
 			"command": "npm.cmd",
 			"args": [
