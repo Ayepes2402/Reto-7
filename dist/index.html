@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEGO: creatividad modular</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body { min-width: 320px; min-height: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+      display: grid;
+      place-items: center;
+      background-color: #dceaf0;
+      background-image: radial-gradient(#b7cdd4 0.8px, transparent 0.8px);
+      background-size: 18px 18px;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    main { width: min(100%, 1000px); }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 8px 25px #0002;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 8px; }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/index-CzLgcPkl.js"></script>
+</head>
+<body>
+  <main aria-label="Juego tipográfico de LEGO">
+  </main>
+</body>
+</html>
