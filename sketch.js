@@ -14,13 +14,12 @@ let uiOverlay;
 function setup() {
   canvasHost = document.getElementById("simulation-canvas");
   const canvasWidth = Math.max(320, canvasHost.clientWidth || 900);
-  const canvasHeight = Math.round(canvasWidth * 0.61);
+  const canvasHeight = canvasHost.clientHeight || windowHeight;
   const canvas = createCanvas(canvasWidth, canvasHeight);
   canvas.parent(canvasHost);
   pixelDensity(Math.min(window.devicePixelRatio || 1, 2));
   uiOverlay = new UIOverlay();
   systemManager = new SystemManager(width, height, uiOverlay);
-  uiOverlay.bind(systemManager);
   lastFrameTime = millis();
 }
 
@@ -37,7 +36,7 @@ function windowResized() {
   const oldWidth = width;
   const oldHeight = height;
   const newWidth = Math.max(320, canvasHost.clientWidth || 900);
-  const newHeight = Math.round(newWidth * 0.61);
+  const newHeight = canvasHost.clientHeight || windowHeight;
   resizeCanvas(newWidth, newHeight);
   systemManager.resize(newWidth, newHeight, newWidth / oldWidth, newHeight / oldHeight);
 }
@@ -56,6 +55,8 @@ function mouseDragged() {
   if (systemManager) systemManager.setDestination(mouseX, mouseY);
   return false;
 }
+
+Object.assign(window, { setup, draw, windowResized, mousePressed, mouseMoved, mouseDragged });
 
 function seededRandom(seed) {
   let state = seed >>> 0;
@@ -240,14 +241,6 @@ class Planet {
       ellipse(particle.position.x, particle.position.y, 2.5);
     }
 
-    noStroke();
-    fill(this.isVisited ? SPACE_COLORS.cyan : "#a7b5c6");
-    textAlign(CENTER, CENTER);
-    textStyle(BOLD);
-    textSize(9);
-    text(this.isVisited ? this.letter : `PLANETA ${String.fromCharCode(65 + this.index)}`, x, y + radius + 11);
-    textStyle(NORMAL);
-
     if (!this.isVisited && nearby) {
       noFill();
       stroke(139, 227, 220, 125 + sin(time * 5) * 55);
@@ -255,11 +248,6 @@ class Planet {
       drawingContext.setLineDash([3, 4]);
       ellipse(x, y, (radius + 14) * 2);
       drawingContext.setLineDash([]);
-      noStroke();
-      fill(SPACE_COLORS.cyan);
-      textAlign(CENTER, BOTTOM);
-      textSize(7);
-      text("RANGO DE CONTACTO", x, y - radius - 13);
     }
 
     if (this.beamEnergy > 0) this.renderCommunicationBeam(center, time);
@@ -685,50 +673,26 @@ class Spaceship {
 class UIOverlay {
   constructor() {
     this.slots = [...document.querySelectorAll(".letter-slot")];
-    this.logItems = [...document.querySelectorAll(".planet-log li")];
-    this.strip = document.querySelector(".signal-strip");
-    this.hint = document.getElementById("signal-hint");
-    this.status = document.getElementById("mission-status");
-    this.visitCount = document.getElementById("visit-count");
-    this.note = document.getElementById("interaction-copy");
+    this.sequence = document.getElementById("letter-sequence");
     this.visitedCount = 0;
-  }
-
-  bind(system) {
-    document.getElementById("reset-button").addEventListener("click", () => system.reset());
   }
 
   reveal(planet) {
     this.slots[planet.index].textContent = planet.letter;
     this.slots[planet.index].classList.add("revealed");
-    this.logItems[planet.index].classList.add("visited");
-    this.logItems[planet.index].querySelector(".log-result").textContent = `SEÑAL: ${planet.letter}`;
     this.visitedCount++;
-    this.visitCount.textContent = `${String(this.visitedCount).padStart(2, "0")} / 04 VISITAS`;
-    this.note.textContent = `Planeta ${String.fromCharCode(65 + planet.index)} visitado. Letra ${planet.letter} recuperada; enlace establecido con la estación.`;
   }
 
   complete() {
-    this.strip.classList.add("complete");
-    this.hint.textContent = "TRANSMISIÓN COMPLETA · NASA";
-    this.status.textContent = "MISIÓN CUMPLIDA";
-    this.note.textContent = "Las cuatro señales están reunidas. La palabra NASA queda reconstruida en el registro de misión.";
+    this.sequence.classList.add("complete");
   }
 
   reset() {
     for (const slot of this.slots) {
-      slot.textContent = "_";
+      slot.textContent = "";
       slot.classList.remove("revealed");
     }
-    for (const item of this.logItems) {
-      item.classList.remove("visited");
-      item.querySelector(".log-result").textContent = "EN ESPERA";
-    }
-    this.strip.classList.remove("complete");
-    this.hint.textContent = "SEÑAL CIFRADA · VISITA LOS PLANETAS";
-    this.status.textContent = "EXPLORACIÓN EN CURSO";
-    this.visitCount.textContent = "00 / 04 VISITAS";
-    this.note.textContent = "Selecciona un planeta para visitarlo. También puedes guiar la nave con el cursor y acercarte a un mundo.";
+    this.sequence.classList.remove("complete");
     this.visitedCount = 0;
   }
 }
@@ -846,7 +810,6 @@ class SystemManager {
     this.renderStation();
     for (const planet of this.planets) planet.render(this.center, this, this.time);
     this.ship.render();
-    this.renderHUD();
     if (this.complete) this.renderVictory();
   }
 
@@ -910,26 +873,6 @@ class SystemManager {
     fill(242, 200, 121, 185);
     ellipse(this.center.x - 24, this.center.y - 24, 3);
     ellipse(this.center.x + 24, this.center.y - 24, 3);
-    fill("#adbbca");
-    textAlign(CENTER, TOP);
-    textSize(8);
-    text("ESTACIÓN CENTRAL", this.center.x, this.center.y + 25);
-  }
-
-  renderHUD() {
-    noStroke();
-    fill(157, 177, 198, 170);
-    textAlign(LEFT, TOP);
-    textSize(8);
-    text("SECTOR 04  /  EXPLORACIÓN PLANETARIA", 11, 10);
-    textAlign(RIGHT, TOP);
-    text(`T+${this.time.toFixed(1)} s`, this.width - 11, 10);
-    if (!this.complete) {
-      fill(190, 211, 229, 170);
-      textAlign(CENTER, BOTTOM);
-      textSize(9);
-      text("PILOTA CON EL PUNTERO · CLIC EN UN PLANETA PARA ESTABLECER CONTACTO", this.width / 2, this.height - 10);
-    }
   }
 
   renderVictory() {
@@ -940,9 +883,6 @@ class SystemManager {
     const pulse = 1 + sin(this.victoryTimer * 3.2) * 0.04;
     textAlign(CENTER, CENTER);
     textStyle(BOLD);
-    fill(139, 227, 220, fade + 80);
-    textSize(13);
-    text("MISIÓN CUMPLIDA · SEÑAL RECUPERADA", this.width / 2, this.height * 0.39);
     fill(255, 220, 147, fade + 100);
     textSize(54 * pulse);
     text("NASA", this.width / 2, this.height * 0.5);

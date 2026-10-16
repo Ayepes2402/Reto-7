@@ -9,57 +9,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.min.js"></script>
 </head>
 <body>
-  <header class="topbar">
-    <a class="wordmark" href="#inicio"><span class="agency-mark">NASA</span><span class="wordmark-divider">/</span> SEÑAL ESTELAR</a>
-    <div class="topbar-meta"><span class="live-dot"></span> DEEP SPACE NETWORK <span class="meta-divider">/</span> EXPLORATION LOG</div>
-    <a class="doc-link" href="https://github.com/Ayepes2402/Reto-7/blob/main/PROPUESTA_NCUERPOS.md" target="_blank" rel="noreferrer">FICHA DEL SISTEMA <span aria-hidden="true">↗</span></a>
-  </header>
-
-  <main id="inicio">
-    <section class="mission-intro">
-      <div>
-        <p class="eyebrow">NASA · MISIÓN DE EXPLORACIÓN PLANETARIA / ARCHIVO DE SEÑAL</p>
-        <h1>Cuatro mundos.<br /><em>Una señal por descifrar.</em></h1>
-        <p class="lede">Pilota la nave entre órbitas y visita cada planeta. Cada encuentro revela un carácter y establece un enlace con la estación central.</p>
-      </div>
-      <div class="mission-badge"><span class="live-dot"></span><span id="mission-status">EXPLORACIÓN EN CURSO</span><small id="visit-count">00 / 04 VISITAS</small></div>
-    </section>
-
-    <section class="signal-strip" aria-label="Letras recuperadas">
-      <div class="signal-label"><span class="section-index">01</span><span>TRANSMISIÓN RECUPERADA</span></div>
-      <div class="letter-sequence" id="letter-sequence">
-        <span class="letter-slot" data-slot="0">_</span><span class="sequence-dot">·</span>
-        <span class="letter-slot" data-slot="1">_</span><span class="sequence-dot">·</span>
-        <span class="letter-slot" data-slot="2">_</span><span class="sequence-dot">·</span>
-        <span class="letter-slot" data-slot="3">_</span>
-      </div>
-      <div class="signal-hint" id="signal-hint">SEÑAL CIFRADA · VISITA LOS PLANETAS</div>
-    </section>
-
-    <section class="mission-layout" aria-label="Sistema orbital interactivo">
-      <div class="orbit-column">
-        <div class="orbit-heading">
-          <div><span class="section-index">02</span><h2>Sistema orbital · sector 04</h2></div>
-          <div class="orbit-legend"><span><i class="legend-station"></i> ESTACIÓN</span><span><i class="legend-planet"></i> MUNDO</span><span><i class="legend-link"></i> ENLACE</span></div>
-        </div>
-        <div class="canvas-frame"><div id="simulation-canvas"></div></div>
-        <div class="orbit-footer"><span id="orbit-readout">4 CUERPOS EN ÓRBITA</span><span>CLICK EN UN PLANETA O PILOTA CON EL PUNTERO</span></div>
-      </div>
-      <aside class="mission-panel">
-        <div class="panel-heading"><div><span class="section-index">03</span><h2>Registro de exploración</h2></div><span class="panel-live">EN VIVO</span></div>
-        <ol class="planet-log" id="planet-log">
-          <li data-log="0"><span class="log-index">01</span><span class="log-name">PLANETA A</span><span class="log-result">EN ESPERA</span></li>
-          <li data-log="1"><span class="log-index">02</span><span class="log-name">PLANETA B</span><span class="log-result">EN ESPERA</span></li>
-          <li data-log="2"><span class="log-index">03</span><span class="log-name">PLANETA C</span><span class="log-result">EN ESPERA</span></li>
-          <li data-log="3"><span class="log-index">04</span><span class="log-name">PLANETA D</span><span class="log-result">EN ESPERA</span></li>
-        </ol>
-        <div class="mission-note"><span class="note-mark">i</span><p id="interaction-copy">Selecciona un planeta para visitarlo. También puedes guiar la nave con el cursor y acercarte a un mundo.</p></div>
-        <button id="reset-button" class="reset-button" type="button">↻ REINICIAR EXPLORACIÓN</button>
-        <p class="academic-note">PROTOTIPO ACADÉMICO INSPIRADO EN LA EXPLORACIÓN ESPACIAL. NO ES UN PRODUCTO OFICIAL DE NASA.</p>
-      </aside>
-    </section>
-    <footer><span>MODELO AGENTE–ENTORNO · UNIDAD 7</span><span>ÓRBITA → ENCUENTRO → DESCUBRIMIENTO → SEÑAL</span></footer>
+  <main id="simulation-canvas" aria-label="Simulación interactiva del sistema planetario">
+    <div class="letter-sequence" id="letter-sequence" aria-label="Letras recuperadas">
+      <span class="letter-slot"></span>
+      <span class="letter-slot"></span>
+      <span class="letter-slot"></span>
+      <span class="letter-slot"></span>
+    </div>
   </main>
-  <script src="/sketch.js"></script>
+  <script type="module" src="./sketch.js"></script>
 </body>
 </html>
